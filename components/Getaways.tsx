@@ -49,7 +49,7 @@ const Getaways = () => {
             <p className='text-2xl font-semibold'>$12000.00</p>
             <Link
               href='/main/buy'
-              className='bg-primary text-white px-5 py-2 rounded-full transition-all hover:opacity-[0.95]'
+              className='bg-primary text-white md:text-md text-sm md:px-5 md:py-2 px-4 py-1 rounded-full transition-all hover:opacity-[0.95]'
             >
               Buy Now
             </Link>

@@ -1,6 +1,7 @@
 import React from 'react';
 import Image from 'next/image';
 import { heroImages } from '@/constants';
+import Link from 'next/link';
 
 const Hero = () => {
   return (
@@ -15,9 +16,12 @@ const Hero = () => {
         <p className='text-sm md:text-md'>
           Transform Your Real Estate Experience with Us
         </p>
-        <button className='bg-primary text-white px-6 py-3 mt-6 transition-all hover:opacity-[0.95] rounded-full'>
+        <Link
+          href='/main/buy'
+          className='bg-primary text-white px-6 py-3 md:mt-6 mt-20 transition-all hover:opacity-[0.95] rounded-full'
+        >
           Get Started
-        </button>
+        </Link>
         <div className='md:flex hidden mt-10 gap-2'>
           {heroImages.map((image, index) => (
             <Image

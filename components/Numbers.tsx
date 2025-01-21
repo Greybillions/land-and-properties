@@ -3,7 +3,7 @@ import React from 'react';
 
 const Numbers = () => {
   return (
-    <div className='grid md:grid-cols-4 sm:grid-cols-2 grid-cols-1 gap-5 justify-center items-center md:my-6 bg-white py-10 w-full shadow mx-auto'>
+    <div className='grid md:grid-cols-4 sm:grid-cols-2 grid-cols-2 gap-5 justify-center items-center bg-white py-10 w-full shadow mx-auto'>
       {numbersData.map((number) => (
         <div
           className='flex flex-col items-center justify-center text-center'

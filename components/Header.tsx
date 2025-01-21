@@ -16,9 +16,9 @@ const Header = () => {
   return (
     <header className='container md:p-10 p-3 flex items-center justify-between w-full'>
       {/* Logo Section */}
-      <Link className='flex gap-2' href='/'>
+      <Link className='flex gap-2 justify-center items-center' href='/'>
         <FaMountain className='text-4xl text-primary' />
-        <h2 className='text-3xl caveat font-bold'>EST</h2>
+        <h2 className='text-xl font-semibold'>Assets.ng</h2>
       </Link>
 
       {/* Desktop Navigation */}

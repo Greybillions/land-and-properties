@@ -46,3 +46,30 @@ export const numbersData = [
     amount: '30',
   },
 ];
+
+export const exploreData = [
+  {
+    id: 1,
+    title: 'Explore Our Properties',
+    img: '/hero1.jpg',
+    url: '/main/sell',
+  },
+  {
+    id: 2,
+    title: 'Buy Your Dream Home',
+    img: '/hero2.jpg',
+    url: '/main/buy',
+  },
+  {
+    id: 3,
+    title: 'Sell Your Property',
+    img: '/hero3.jpg',
+    url: 'main/sell',
+  },
+  {
+    id: 4,
+    title: 'Property Services',
+    img: '/hero4.jpg',
+    url: 'main/verify',
+  },
+];

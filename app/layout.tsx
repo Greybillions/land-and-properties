@@ -13,8 +13,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: 'Land and Properties',
-  description: 'Land and Properties, a Next.js app',
+  title: 'Assets.ng',
+  description: 'Land and Properties',
 };
 
 const RootLayout = ({

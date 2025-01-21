@@ -11,14 +11,14 @@ const Getaways = () => {
   return (
     <section className='py-10 px-3 bg-white'>
       <div className='container flex flex-col items-center'>
-        <h2 className='text-2xl self-start md:self-center md:text-5xl font-semibold'>
+        <h2 className='text-2xl md:text-5xl font-semibold'>
           Discover Getaways
         </h2>
-        <p className='text-xs md:text-sm md:pt-3'>
+        <p className='text-center text-sm md:text-lg md:pt-3'>
           Discover the allure of prime home hotspots, where every destination
           offers something truly special
         </p>
-        <div className='bg-[#ccd2cd] mt-6 pb-6 rounded-3xl flex flex-col items-start'>
+        <div className='bg-[#ccd2cd] mt-6 pb-6 rounded-t-2xl flex flex-col items-start'>
           <Image
             src={getawayImg}
             alt='getaways'

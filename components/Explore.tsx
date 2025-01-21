@@ -9,9 +9,10 @@ const Explore = () => {
     <section className='py-10 px-3 bg-white'>
       <div className='container flex flex-col items-center'>
         <h2 className='text-center text-2xl md:text-5xl  font-semibold'>
-          Explore Designs That Redefine <br /> Conventional Space
+          Explore Designs That Redefine <br className='md:block hidden' />{' '}
+          Conventional Space
         </h2>
-        <p className='text-center text-xs md:text-sm md:pt-3'>
+        <p className='text-center text-sm md:text-lg md:pt-3'>
           Embark on a journey of collaboration where your dreams become
           architectural masterpieces
         </p>
@@ -19,9 +20,9 @@ const Explore = () => {
           {exploreData.map((data) => (
             <div
               key={data.id}
-              className='flex justify-between w-full items-center border-t border-b border-gray-300 border-dashed py-0.5'
+              className='flex justify-between md:even:flex-row-reverse w-full items-center border-t border-b border-gray-300 border-dashed py-0.5'
             >
-              <div className='flex items-center gap-3 justify-center'>
+              <div className='flex items-center flex-row gap-3 justify-center'>
                 <Image
                   src={data.img}
                   alt={data.title}

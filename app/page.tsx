@@ -5,6 +5,7 @@ import Footer from '@/components/Footer';
 import Numbers from '@/components/Numbers';
 import Explore from '@/components/Explore';
 import Getaways from '@/components/Getaways';
+import Testimonials from '@/components/Testimonials';
 
 const page = () => {
   return (
@@ -15,6 +16,7 @@ const page = () => {
         <Numbers />
         <Explore />
         <Getaways />
+        <Testimonials />
       </main>
       <Footer />
     </>

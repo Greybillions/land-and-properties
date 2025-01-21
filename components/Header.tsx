@@ -35,7 +35,7 @@ const Header = () => {
       </div>
 
       {/* Mobile Hamburger Menu */}
-      <div className='flex md:hidden relative z-20'>
+      <div className='flex md:hidden relative z-40'>
         <button onClick={toggleMenu} aria-label='Toggle menu'>
           {menuOpen ? (
             <RxCross1 className='text-3xl transition-transform' />
@@ -47,7 +47,7 @@ const Header = () => {
 
       {/* Sliding Menu */}
       <div
-        className={`fixed z-10 top-0 right-0 h-screen w-3/4 bg-white shadow-lg transition-transform duration-300 ${
+        className={`fixed z-30 top-0 right-0 h-screen w-3/4 bg-white shadow-lg transition-transform duration-300 ${
           menuOpen ? 'translate-x-0' : 'translate-x-full'
         }`}
       >

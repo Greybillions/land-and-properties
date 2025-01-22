@@ -30,6 +30,11 @@ import * as z from 'zod';
 // Form validation schema
 const formSchema = z.object({
   sellerName: z.string().min(2, 'Name must be at least 2 characters'),
+  email: z.string().email('Invalid email address'),
+  phoneNumber: z
+    .string()
+    .min(10, 'Phone number must be at least 10 digits')
+    .regex(/^\d+$/, 'Phone number must contain only numbers'),
   propertyType: z.string().min(1, 'Please select a property type'),
   propertyDetails: z.string().min(10, 'Please provide more details'),
   price: z.string().min(1, 'Price is required'),
@@ -45,6 +50,8 @@ const SellPropertyPage = () => {
     resolver: zodResolver(formSchema),
     defaultValues: {
       sellerName: '',
+      email: '',
+      phoneNumber: '',
       propertyType: '',
       propertyDetails: '',
       price: '',
@@ -56,18 +63,15 @@ const SellPropertyPage = () => {
     if (e.target.files && e.target.files.length > 0) {
       setImages(e.target.files);
 
-      // Create preview URLs
       const newPreviews = Array.from(e.target.files).map((file) =>
         URL.createObjectURL(file)
       );
 
-      // Clean up old preview URLs before setting new ones
       previews.forEach((url) => URL.revokeObjectURL(url));
       setPreviews(newPreviews);
     }
   };
 
-  // Cleanup preview URLs when component unmounts
   React.useEffect(() => {
     return () => {
       previews.forEach((url) => URL.revokeObjectURL(url));
@@ -79,7 +83,6 @@ const SellPropertyPage = () => {
     URL.revokeObjectURL(previews[index]);
     setPreviews(newPreviews);
 
-    // Convert FileList to array, remove item, and create new FileList
     if (images) {
       const dt = new DataTransfer();
       const files = Array.from(images);
@@ -117,6 +120,42 @@ const SellPropertyPage = () => {
                     <FormLabel>Seller Name</FormLabel>
                     <FormControl>
                       <Input placeholder='Enter your name' {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name='email'
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Email Address</FormLabel>
+                    <FormControl>
+                      <Input
+                        type='email'
+                        placeholder='Enter your email address'
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name='phoneNumber'
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Phone Number</FormLabel>
+                    <FormControl>
+                      <Input
+                        type='tel'
+                        placeholder='Enter your phone number'
+                        {...field}
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -214,7 +253,6 @@ const SellPropertyPage = () => {
                 </FormControl>
                 <FormMessage />
 
-                {/* Image Preview Section */}
                 {previews.length > 0 && (
                   <div className='mt-4'>
                     <p className='text-sm text-gray-500 mb-2'>Preview:</p>

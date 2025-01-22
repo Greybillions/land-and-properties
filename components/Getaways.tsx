@@ -6,6 +6,7 @@ import Image from 'next/image';
 
 import getawayImg from '@/public/hero3.jpg';
 import Link from 'next/link';
+import { DollarSign } from 'lucide-react';
 
 const Getaways = () => {
   return (
@@ -46,7 +47,10 @@ const Getaways = () => {
             </p>
           </div>
           <div className='flex items-center w-full justify-between px-6 mt-6'>
-            <p className='text-2xl font-semibold'>$12000.00</p>
+            <p className='text-xl font-semibold flex justify-center items-center text-green-600'>
+              <DollarSign className='w-5 h-5' />
+              12000.00
+            </p>
             <Link
               href='/main/buy'
               className='bg-primary text-white md:text-md text-sm md:px-5 md:py-2 px-4 py-1 rounded-full transition-all hover:opacity-[0.95]'

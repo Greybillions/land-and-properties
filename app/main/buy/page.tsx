@@ -63,7 +63,6 @@ function PropertyContent() {
       </CardHeader>
 
       <CardContent className='space-y-4'>
-        {/* Property Images */}
         {propertyListing.images.length > 0 ? (
           <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
             {propertyListing.images.map((url, index) => (
@@ -90,7 +89,6 @@ function PropertyContent() {
           </div>
         )}
 
-        {/* Property Details */}
         <div className='space-y-4'>
           <div className='flex items-center justify-between'>
             <h3 className='text-lg font-semibold'>Price</h3>
@@ -126,20 +124,16 @@ const BuyPage = () => {
     <main className='container max-w-[1400px] mx-auto py-10 px-4'>
       <h1 className='text-3xl font-bold mb-6'>Property Listings</h1>
       <div className='mx-auto flex flex-col md:flex-row flex-wrap gap-10'>
-        <Suspense fallback={<div>Loading...</div>}>
-          <PropertyContent />
-          <PropertyContent />
-          <PropertyContent />
-          <PropertyContent />
-          <PropertyContent />
-          <PropertyContent />
-          <PropertyContent />
-          <PropertyContent />
-          <PropertyContent />
-        </Suspense>
+        {[...Array(9)].map((_, index) => (
+          <Suspense fallback={<div>Loading property...</div>} key={index}>
+            <PropertyContent />
+          </Suspense>
+        ))}
       </div>
     </main>
   );
 };
+
+export const dynamic = 'force-dynamic';
 
 export default BuyPage;

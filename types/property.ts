@@ -6,6 +6,7 @@ export interface PropertyListing {
   propertyType: string;
   propertyDetails: string;
   price: string;
+  imageCount: string;
   location: string;
   images: string[]; // Array of image URLs
   createdAt?: Date; // Optional for auto-generated timestamps

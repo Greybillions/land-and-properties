@@ -26,6 +26,21 @@ import { X } from 'lucide-react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import * as z from 'zod';
+import { initializeApp } from 'firebase/app';
+import { getFirestore, collection, addDoc } from 'firebase/firestore';
+import { compressImage } from '@/utils/imageCompression';
+
+const firebaseConfig = {
+  apiKey: 'AIzaSyBht7qNA5kDwKFnnG1HByB6-tCcUedp6Us',
+  authDomain: 'assestsng.firebaseapp.com',
+  projectId: 'assestsng',
+  storageBucket: 'assestsng.firebasestorage.app',
+  messagingSenderId: '837337349517',
+  appId: '1:837337349517:web:019f319266972021fc11c4',
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
 
 // Form validation schema
 const formSchema = z.object({
@@ -93,12 +108,55 @@ const SellPropertyPage = () => {
   };
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
-    const imageCount = images ? images.length : 0;
-    const searchParams = new URLSearchParams({
-      ...values,
-      imageCount: String(imageCount),
-    }).toString();
-    router.push(`/main/buy?${searchParams}`);
+    if (!images || images.length === 0) {
+      alert('Please upload at least one image.');
+      return;
+    }
+
+    try {
+      // Compress and convert images to Base64
+      const compressedImages = await Promise.all(
+        Array.from(images).map(compressImage)
+      );
+      let totalSize = 0;
+      const imageBase64Array: string[] = [];
+
+      for (const image of compressedImages) {
+        const base64 = await new Promise<string>((resolve, reject) => {
+          const reader = new FileReader();
+          reader.onload = () => resolve(reader.result as string);
+          reader.onerror = reject;
+          reader.readAsDataURL(image);
+        });
+
+        const sizeInBytes = new Blob([base64]).size;
+        if (totalSize + sizeInBytes > 5 * 1024 * 1024) {
+          // 5MB limit
+          alert(
+            'Total image size exceeds 5MB. Please reduce the number or size of images.'
+          );
+          return;
+        }
+
+        totalSize += sizeInBytes;
+        imageBase64Array.push(base64);
+      }
+
+      const payload = {
+        ...values,
+        images: imageBase64Array,
+        createdAt: new Date(),
+      };
+
+      // Send data directly to Firebase
+      const docRef = await addDoc(collection(db, 'properties'), payload);
+
+      alert('Property added successfully. ID: ' + docRef.id);
+      router.push('/main/buy'); // Redirect to another page if needed
+    } catch (error) {
+      console.error('Error submitting form:', error);
+      alert('An error occurred while submitting the form.');
+    }
   };
 
   return (
@@ -262,7 +320,7 @@ const SellPropertyPage = () => {
                           <Image
                             width={100}
                             height={100}
-                            src={preview}
+                            src={preview || '/placeholder.svg'}
                             alt={`Preview ${index + 1}`}
                             className='w-24 h-24 object-cover rounded-lg'
                           />

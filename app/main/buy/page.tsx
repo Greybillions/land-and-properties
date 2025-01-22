@@ -1,9 +1,8 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import Image from 'next/image';
-import { db } from '@/lib/firebase'; // Firebase import
-import { collection, getDocs } from 'firebase/firestore'; // Firebase imports
+import { useSearchParams } from 'next/navigation';
 import {
   Card,
   CardContent,
@@ -14,7 +13,7 @@ import {
 } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
-import { Building2, MapPin, DollarSign, Phone, Mail } from 'lucide-react';
+import { Building2, MapPin, DollarSign } from 'lucide-react';
 
 interface PropertyListing {
   sellerName: string;
@@ -22,34 +21,20 @@ interface PropertyListing {
   propertyDetails: string;
   price: string;
   location: string;
-  imageCount: string;
-  phoneNumber: string;
-  email: string;
   images: string[];
 }
 
 const BuyPage = () => {
-  const [propertyListing, setPropertyListing] =
-    useState<PropertyListing | null>(null);
+  const searchParams = useSearchParams();
 
-  useEffect(() => {
-    const fetchProperties = async () => {
-      const querySnapshot = await getDocs(collection(db, 'properties'));
-      const properties = querySnapshot.docs.map((doc) => doc.data());
-
-      // Assuming we only want to display the first property for now
-      const selectedProperty = properties[0] as PropertyListing;
-      setPropertyListing(selectedProperty);
-    };
-
-    fetchProperties();
-  }, []);
-
-  if (!propertyListing) {
-    return (
-      <div className='container mx-auto py-10 px-4 h-[80vh]'>Loading...</div>
-    );
-  }
+  const propertyListing: PropertyListing = {
+    sellerName: searchParams.get('sellerName') || '',
+    propertyType: searchParams.get('propertyType') || '',
+    propertyDetails: searchParams.get('propertyDetails') || '',
+    price: searchParams.get('price') || '',
+    location: searchParams.get('location') || '',
+    images: JSON.parse(searchParams.get('images') || '[]'),
+  };
 
   return (
     <main className='container mx-auto py-10 px-4'>
@@ -79,18 +64,31 @@ const BuyPage = () => {
 
           <CardContent className='space-y-4'>
             {/* Property Images */}
-            <div className='relative w-full h-64 bg-gray-100 rounded-lg overflow-hidden'>
-              <Image
-                src={propertyListing.images[0] || '/public/hero1.jpg'}
-                alt='Property'
-                fill
-                className='object-cover'
-                priority
-              />
-              <div className='absolute bottom-2 right-2 bg-black/60 text-white px-2 py-1 rounded text-sm'>
-                {propertyListing.imageCount} photos
+            {propertyListing.images.length > 0 ? (
+              <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
+                {propertyListing.images.map((url, index) => (
+                  <div key={url} className='relative aspect-video'>
+                    <Image
+                      src={url}
+                      alt={`Property image ${index + 1}`}
+                      fill
+                      className='object-cover rounded-lg'
+                      priority={index === 0}
+                    />
+                  </div>
+                ))}
               </div>
-            </div>
+            ) : (
+              <div className='relative w-full aspect-video bg-gray-100 rounded-lg'>
+                <Image
+                  src='/api/placeholder/800/400'
+                  alt='Property'
+                  fill
+                  className='object-cover rounded-lg'
+                  priority
+                />
+              </div>
+            )}
 
             {/* Property Details */}
             <div className='space-y-4'>
@@ -113,21 +111,11 @@ const BuyPage = () => {
             </div>
           </CardContent>
 
-          <CardFooter className='space-y-2 flex flex-col gap-2 items-start'>
+          <CardFooter className='flex flex-col items-start gap-2'>
             <h3 className='text-lg font-semibold'>Contact Information</h3>
             <p className='text-gray-600'>
               Listed by: {propertyListing.sellerName}
             </p>
-            {propertyListing.phoneNumber && (
-              <p className='text-gray-600 flex items-center gap-2'>
-                <Phone className='w-4 h-4' /> {propertyListing.phoneNumber}
-              </p>
-            )}
-            {propertyListing.email && (
-              <p className='text-gray-600 flex items-center gap-2'>
-                <Mail className='w-4 h-4' /> {propertyListing.email}
-              </p>
-            )}
           </CardFooter>
         </Card>
       </div>

@@ -12,13 +12,13 @@ const Footer = () => {
         />
         <button
           type='submit'
-          className='bg-primary relative w-[40%] text-white px-5 rounded-full md:-left-10 -left-4 py-1.5 z-10 transition-all hover:bg-[#31843c]'
+          className='bg-primary relative w-[40%] md:w-[10%] text-white px-5 rounded-full md:-left-10 -left-4 py-1.5 z-10 transition-all hover:bg-[#31843c]'
         >
           Search
         </button>
       </div>
-      <div className='container flex items-center md:justify-end justify-center'>
-        <p className='text-sm md:text-base md:mt-0 mt-5'>
+      <div className='container w-full flex text-center md:text-start items-center md:justify-start justify-center'>
+        <p className='w-full text-sm md:text-base md:mt-0 mt-5'>
           Copyright &copy; {new Date().getFullYear()} All rights reserved
         </p>
       </div>

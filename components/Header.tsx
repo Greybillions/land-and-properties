@@ -14,7 +14,7 @@ const Header = () => {
   };
 
   return (
-    <header className='container md:p-10 p-3 flex items-center justify-between w-full'>
+    <header className='container md:p-6 p-3 flex items-center justify-between w-full'>
       {/* Logo Section */}
       <Link className='flex gap-2 justify-center items-center' href='/'>
         <FaMountain className='text-4xl text-primary' />
@@ -22,7 +22,7 @@ const Header = () => {
       </Link>
 
       {/* Desktop Navigation */}
-      <div className='md:flex hidden text-lg gap-20 justify-end'>
+      <div className='md:flex hidden font-semibold gap-20 justify-end'>
         {headerLinks.map((link) => (
           <Link
             key={link.href}

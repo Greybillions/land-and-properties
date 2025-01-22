@@ -5,13 +5,13 @@ import Link from 'next/link';
 
 const Hero = () => {
   return (
-    <section className='flex md:h-[80vh] h-[70vh] relative z-5 bg-hero-bg md:bg-none bg-cover bg-center bg-no-repeat md:mx-3'>
+    <section className='flex md:h-[80vh] h-[70vh] relative z-5 bg-hero-bg md:bg-none bg-cover bg-center bg-no-repeat'>
       <div className='text relative flex flex-col justify-center items-center lg:w-1/2 w-full'>
         {/* Dark Overlay for Smaller Devices */}
         <div className='absolute inset-0 bg-black/40 md:hidden z-0'></div>
 
         <p className='text-sm md:text-md text-white md:text-black z-10'>
-          welcome to our home
+          Welcome to our home
         </p>
         <div className='flex flex-col my-6 z-10 text-white md:text-black'>
           <h1 className='lg:text-8xl text-5xl font-semibold'>Real</h1>

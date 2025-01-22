@@ -1,8 +1,9 @@
 'use client';
 
-import React, { Suspense } from 'react';
+import React, { Suspense, useEffect, useState } from 'react';
 import Image from 'next/image';
-import { useSearchParams } from 'next/navigation';
+import { getProperties } from '@/utils/getProperties';
+
 import {
   Card,
   CardContent,
@@ -13,7 +14,9 @@ import {
 } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
-import { Building2, MapPin, DollarSign } from 'lucide-react';
+import { Building2, MapPin, DollarSign, Loader2 } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import Link from 'next/link';
 
 interface PropertyListing {
   sellerName: string;
@@ -26,19 +29,9 @@ interface PropertyListing {
   phoneNumber: string;
 }
 
-function PropertyContent() {
-  const searchParams = useSearchParams();
-
-  const propertyListing: PropertyListing = {
-    sellerName: searchParams.get('sellerName') || '',
-    propertyType: searchParams.get('propertyType') || '',
-    propertyDetails: searchParams.get('propertyDetails') || '',
-    price: searchParams.get('price') || '',
-    location: searchParams.get('location') || '',
-    images: JSON.parse(searchParams.get('images') || '[]'),
-    email: searchParams.get('email') || '',
-    phoneNumber: searchParams.get('phoneNumber') || '',
-  };
+// Update PropertyContent to accept property as a prop
+function PropertyContent({ property }: { property: PropertyListing }) {
+  const propertyListing = property;
 
   return (
     <Card className='md:w-[400px] w-[100%]'>
@@ -120,16 +113,72 @@ function PropertyContent() {
 }
 
 const BuyPage = () => {
+  const [properties, setProperties] = useState<PropertyListing[]>([]);
+  const [visibleProperties, setVisibleProperties] = useState<PropertyListing[]>(
+    []
+  );
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const data = await getProperties();
+      setProperties(data);
+      setVisibleProperties(data.slice(0, 4)); // Only show first 4 on load
+      setLoading(false);
+    };
+
+    fetchData();
+  }, []);
+
+  if (loading) {
+    return (
+      <div className='text-center flex justify-center items-center w-full h-[80vh]'>
+        <Loader2 className='h-12 w-12 animate-spin' />
+      </div>
+    );
+  }
+
+  const handleShowMore = () => {
+    const newVisibleCount = visibleProperties.length + 4;
+    setVisibleProperties(properties.slice(0, newVisibleCount));
+  };
+
+  const canShowMore = visibleProperties.length < properties.length;
+
+  // Check if no properties were fetched
+  if (properties.length === 0) {
+    return (
+      <main className='container max-w-[1400px] h-[80vh] mx-auto md:py-10 py-3 px-4 text-center'>
+        <h1 className='text-3xl font-bold mb-6'>No Properties Listed</h1>
+        <p className='text-lg mb-4'>
+          Looks like there are no properties available right now.
+        </p>
+        <Link href='/main/sell'>
+          <Button className='text-white'>List Your Property</Button>
+        </Link>
+      </main>
+    );
+  }
+
   return (
-    <main className='container max-w-[1400px] mx-auto py-10 px-4'>
+    <main className='container max-w-[1400px] mx-auto md:py-10 py-3 px-4'>
       <h1 className='text-3xl font-bold mb-6'>Property Listings</h1>
       <div className='mx-auto flex flex-col md:flex-row flex-wrap gap-10'>
-        {[...Array(9)].map((_, index) => (
-          <Suspense fallback={<div>Loading property...</div>} key={index}>
-            <PropertyContent />
+        {visibleProperties.map((property, index) => (
+          <Suspense
+            fallback={<div>Loading property...</div>}
+            key={property.sellerName + index}
+          >
+            <PropertyContent property={property} />
           </Suspense>
         ))}
       </div>
+
+      {canShowMore && (
+        <div className='flex justify-center mt-6 text-white'>
+          <Button onClick={handleShowMore}>Show More</Button>
+        </div>
+      )}
     </main>
   );
 };

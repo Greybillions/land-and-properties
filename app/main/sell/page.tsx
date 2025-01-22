@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -22,7 +22,7 @@ import {
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Button } from '@/components/ui/button';
-import { X } from 'lucide-react';
+import { Loader2, X } from 'lucide-react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import * as z from 'zod';
@@ -60,6 +60,9 @@ const SellPropertyPage = () => {
   const router = useRouter();
   const [images, setImages] = useState<FileList | null>(null);
   const [previews, setPreviews] = useState<string[]>([]);
+  const [showSuccessPopup, setShowSuccessPopup] = useState<boolean>(false);
+  const [successId, setSuccessId] = useState<string | null>(null);
+  const [loading, setLoading] = useState(true);
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -73,6 +76,11 @@ const SellPropertyPage = () => {
       location: '',
     },
   });
+
+  useEffect(() => {
+    //  Simulate some initial data loading if needed
+    setTimeout(() => setLoading(false), 1000); // Example: wait 1 second before showing the form
+  }, []);
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files.length > 0) {
@@ -114,6 +122,9 @@ const SellPropertyPage = () => {
     }
 
     try {
+      // Show loading state during form submission
+      setLoading(true);
+
       // Compress and convert images to Base64
       const compressedImages = await Promise.all(
         Array.from(images).map(compressImage)
@@ -151,12 +162,29 @@ const SellPropertyPage = () => {
       // Send data directly to Firebase
       const docRef = await addDoc(collection(db, 'properties'), payload);
 
-      alert('Property added successfully. ID: ' + docRef.id);
-      router.push('/main/buy'); // Redirect to another page if needed
+      setSuccessId(docRef.id);
+      setShowSuccessPopup(true);
+      form.reset(); // Reset form if desired
+      // Turn off loading state once submission is complete
+      setLoading(false);
     } catch (error) {
       console.error('Error submitting form:', error);
       alert('An error occurred while submitting the form.');
     }
+  };
+
+  if (loading) {
+    return (
+      <div className='text-center flex justify-center items-center w-full h-[80vh]'>
+        <Loader2 className='h-12 w-12 animate-spin' />
+      </div>
+    );
+  }
+
+  const handleClosePopup = () => {
+    setShowSuccessPopup(false);
+    // Redirect to buy page after closing the popup
+    router.push('/main/buy');
   };
 
   return (
@@ -345,6 +373,21 @@ const SellPropertyPage = () => {
           </Form>
         </CardContent>
       </Card>
+
+      {showSuccessPopup && (
+        <div className='fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50'>
+          <div className='bg-white rounded-lg p-6 shadow-lg max-w-sm w-full'>
+            <h3 className='text-lg font-bold mb-2'>Success!</h3>
+            <p>Property added successfully. ID: {successId}</p>
+            <button
+              onClick={handleClosePopup}
+              className='mt-4 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600'
+            >
+              Close
+            </button>
+          </div>
+        </div>
+      )}
     </main>
   );
 };

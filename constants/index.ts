@@ -9,7 +9,7 @@ export const headerLinks = [
   },
   {
     title: 'Verify Land',
-    href: '/main/verify',
+    href: 'https://www.google.com/maps/search',
   },
 ];
 
